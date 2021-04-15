@@ -1,0 +1,35 @@
+- name: Deploy jenkins container
+  hosts: all
+
+  vars:
+    proxy_env:
+      http_proxy: http://<proxy_host>:8888
+      https_proxy: https://<proxy_host>:8888
+
+  tasks:
+    - name: Deploy Jenkins and get initial password
+      block:
+        - name: Create and run jenkins container
+          docker_container:
+            name: jenkins
+            image: docker.io/library/jenkins:2.60.3
+            volumes:
+              - jenkins-docker-certs:/certs/client:ro
+              - jenkins-data:/var/jenkins_home
+            state: started
+            restart: no
+            recreate: no
+            published_ports:
+              - "8080:8080"
+              - "50000:50000"
+            detach: yes
+          environment: "{{ proxy_env }}"
+        - name: Get initial admin password
+          shell: 'sleep 10 && cat /var/lib/docker/volumes/jenkins-data/_data/secrets/initialAdminPassword'
+          ignore_errors: yes
+          register: admin_passwd
+          failed_when: "admin_passwd.rc >= 2"
+          changed_when: "admin_passwd.rc == 0"
+
+    - debug: msg="Jenkins initial admin password is {{ admin_passwd.stdout_lines[0].strip() }}"
+      when: "admin_passwd.rc == 0"

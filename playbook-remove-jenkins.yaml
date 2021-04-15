@@ -1,0 +1,22 @@
+- name: Deploy jenkins container
+  hosts: all
+
+  tasks:
+    - name: Uninstall Jenkin
+      block:
+        - name: Remove jenkins container
+          docker_container:
+            name: jenkins
+            state: absent
+        - name: Delete jenkins volumes
+          docker_volume:
+            name: '{{ item }}'
+            state: absent
+          with_items:
+            - jenkins-docker-certs
+            - jenkins-data
+        - name: Delete initial image
+          docker_image:
+            name: jenkins
+            tag: 2.60.3
+            state: absent
