@@ -1,6 +1,11 @@
 - name: Deploy jenkins container
   hosts: all
 
+  vars:
+    proxy_env:
+      http_proxy: http://<proxy_host>:8888
+      https_proxy: https://<proxy_host>:8888
+
   tasks:
     - name: Deploy Jenkins and get initial password
       block:
@@ -18,6 +23,7 @@
               - "8080:8080"
               - "50000:50000"
             detach: yes
+          environment: "{{ proxy_env }}"
         - name: Get initial admin password
           shell: 'sleep 10 && cat /var/lib/docker/volumes/jenkins-data/_data/secrets/initialAdminPassword'
           ignore_errors: yes
