@@ -21,10 +21,13 @@
 
 Для применения сценария `playbook-deploy-jenkins.yaml` необходимо заранее подготовить файл `inventory`.
 Можно указать адрес либо hostname целевого сервера в соответствующей группе `docker_host` вместо `IP_ADDRESS`.
+Предполагается что развертывание выполняется из под учетной записи root (хотя это и не best practice).
+Необходимо задать значения переменных `ansible_user` и `ansible_password`. Или использовать ключи `-u root -k`
+для команды `andible-playbook`.
 
 ```
 [docker_host]
-IP_ADDRESS
+IP_ADDRESS ansible_user=root ansible_password=<root_pass>
 ```
 
 ## Initial Jenkins Password

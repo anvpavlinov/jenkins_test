@@ -2,7 +2,7 @@
   hosts: all
 
   tasks:
-    - name: Uninstall Jenkin
+    - name: Uninstall Jenkins
       block:
         - name: Remove jenkins container
           docker_container:
