@@ -12,7 +12,7 @@
         - name: Create and run jenkins container
           docker_container:
             name: jenkins
-            image: docker.io/library/jenkins:2.60.3
+            image: docker.io/jenkins/jenkins:lts
             volumes:
               - jenkins-docker-certs:/certs/client:ro
               - jenkins-data:/var/jenkins_home
