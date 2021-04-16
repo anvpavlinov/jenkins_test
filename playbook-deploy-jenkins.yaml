@@ -2,12 +2,24 @@
   hosts: all
 
   tasks:
+    - name: Setup docker
+      block: 
+      - name: Install docker
+        package:
+          name: docker-ce
+          state: present
+      - name: Start docker service
+        service:
+          name: docker
+          state: started
+          enabled: yes
+
     - name: Deploy Jenkins and get initial password
       block:
         - name: Create and run jenkins container
           docker_container:
             name: jenkins
-            image: docker.io/library/jenkins:2.60.3
+            image: docker.io/jenkins/jenkins:lts
             volumes:
               - jenkins-docker-certs:/certs/client:ro
               - jenkins-data:/var/jenkins_home

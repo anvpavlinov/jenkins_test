@@ -17,6 +17,6 @@
             - jenkins-data
         - name: Delete initial image
           docker_image:
-            name: jenkins
-            tag: 2.60.3
+            name: jenkins/jenkins
+            tag: lts
             state: absent
