@@ -1,0 +1,33 @@
+- name: Update jenkins container
+  hosts: all
+
+  tasks:
+    - name: Uninstall Jenkins
+      block:
+        - name: Remove jenkins container
+          docker_container:
+            name: jenkins
+            state: absent
+        - name: Delete initial image
+          docker_image:
+            name: jenkins/jenkins
+            tag: lts
+            state: absent
+
+    - name: Update Jenkins conrainer
+      block:
+        - name: Create and run jenkins container
+          docker_container:
+            name: jenkins
+            image: docker.io/jenkins/jenkins:lts
+            volumes:
+              - jenkins-docker-certs:/certs/client:ro
+              - jenkins-data:/var/jenkins_home
+            state: started
+            restart: no
+            recreate: no
+            published_ports:
+              - "8080:8080"
+              - "50000:50000"
+            detach: yes
+            restart_policy: unless-stopped

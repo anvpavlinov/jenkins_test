@@ -1,4 +1,4 @@
-- name: Deploy jenkins container
+- name: Remove jenkins container
   hosts: all
 
   tasks:
