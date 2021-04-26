@@ -30,6 +30,7 @@
               - "8080:8080"
               - "50000:50000"
             detach: yes
+            restart_policy: unless-stopped
         - name: Get initial admin password
           shell: 'sleep 10 && cat /var/lib/docker/volumes/jenkins-data/_data/secrets/initialAdminPassword'
           ignore_errors: yes
